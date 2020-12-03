@@ -571,6 +571,16 @@ impl Biscuit {
       res
     }
 
+    /// list blocks
+    pub fn get_blocks(&self) -> &Vec<Block> {
+        &self.blocks
+    }
+
+    /// get authority block
+    pub fn get_authority(&self) -> &Block {
+        &self.authority
+    }
+
     /// pretty printer for this token
     pub fn print(&self) -> String {
         let authority = print_block(&self.symbols, &self.authority);
