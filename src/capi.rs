@@ -941,4 +941,64 @@ pub unsafe extern "C" fn biscuit_block_at(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn block_fact_count(block: Option<&Block>) -> usize {
+    if block.is_none() {
+        update_last_error(Error::InvalidArgument);
+        return usize::MAX;
+    }
+
+    block.unwrap().0.facts.len()
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn block_fact_at(block: Option<&Block>, block_id: usize) -> *const c_char {
+    if block.is_none() {
+        update_last_error(Error::InvalidArgument);
+        return std::ptr::null();
+    }
+
+    let block = block.unwrap().0.clone();
+
+    if block.facts.get(block_id).is_none() {
+        update_last_error(Error::InvalidArgument);
+        return std::ptr::null();
+    }
+
+    let fact = block.facts.get(block_id).unwrap();
+
+    match CString::new(fact.clone()) {
+        Ok(s) => s.into_raw(),
+        Err(_) => {
+            update_last_error(Error::InvalidArgument);
+            std::ptr::null()
+        }
+    }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn block_context(block: Option<&Block>) -> *const c_char {
+    if block.is_none() {
+        update_last_error(Error::InvalidArgument);
+        return std::ptr::null();
+    }
+
+    let block = block.unwrap().0.clone();
+
+    if block.context.is_none() {
+        update_last_error(Error::InvalidArgument);
+        return std::ptr::null();
+    }
+
+    let context = block.context.unwrap();
+
+    match CString::new(context) {
+        Ok(s) => s.into_raw(),
+        Err(_) => {
+            update_last_error(Error::InvalidArgument);
+            return std::ptr::null();
+        }
+    }
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn block_free(_block: Option<Box<Block>>) {}
