@@ -925,4 +925,20 @@ pub unsafe extern "C" fn biscuit_print(biscuit: Option<&Biscuit>) -> *const c_ch
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn biscuit_authority(biscuit: Option<&Biscuit>) -> Option<Box<Block>> {
+    let biscuit = biscuit?;
+    Some(Box::new(Block(biscuit.0.get_authority().clone())))
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn biscuit_block_at(
+    biscuit: Option<&Biscuit>,
+    block_id: usize,
+) -> Option<Box<Block>> {
+    let biscuit = biscuit?;
+    let block = biscuit.0.get_blocks().get(block_id)?;
+    Some(Box::new(Block(block.clone())))
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn block_free(_block: Option<Box<Block>>) {}
