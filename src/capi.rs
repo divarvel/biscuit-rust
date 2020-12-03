@@ -230,6 +230,7 @@ pub struct PublicKey(crate::crypto::PublicKey);
 pub struct BiscuitBuilder<'a>(crate::token::builder::BiscuitBuilder<'a>);
 pub struct BlockBuilder(crate::token::builder::BlockBuilder);
 pub struct Verifier<'a>(crate::token::verifier::Verifier<'a>);
+pub struct Block(crate::token::Block);
 
 #[no_mangle]
 pub unsafe extern "C" fn key_pair_new<'a>(
@@ -922,3 +923,6 @@ pub unsafe extern "C" fn biscuit_print(biscuit: Option<&Biscuit>) -> *const c_ch
         }
     }
 }
+
+#[no_mangle]
+pub unsafe extern "C" fn block_free(_block: Option<Box<Block>>) {}
